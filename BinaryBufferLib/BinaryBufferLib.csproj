@@ -16,6 +16,7 @@
 	<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	<PackageTags>binary;buffer;stream;endian;endianness;binarywriter;binaryreader;serialization;parsing;network;packets</PackageTags>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<RepositoryUrl>https://github.com/TheRealQuantam/BinaryBufferLib.git</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net5.0|AnyCPU'">
