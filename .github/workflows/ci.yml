@@ -1,0 +1,33 @@
+name: Dotnet
+on:
+  push:
+    branches:
+      - master
+      - main
+      - develop
+  pull_request:
+    types:
+      - opened
+      - synchronize
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+    name: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            5.0.x
+            8.0.x
+            10.0.x
+
+      - run: dotnet build BinaryBufferLib.sln
+      - run: dotnet test BinaryBufferLib.sln --configuration Debug
+      - run: dotnet test BinaryBufferLib.sln --configuration Release
