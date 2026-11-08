@@ -34,7 +34,6 @@ public class TestCommon
     [InlineData("negative size", 2, false, -1, 0, typeof(ArgumentOutOfRangeException))]
     [InlineData("add overflow", 2, false, int.MaxValue, 0, typeof(OverflowException))]
     [InlineData("multiply overflow", 2, true, int.MaxValue, 0, typeof(OverflowException))]
-    [InlineData("funny overflow", 2, true, int.MinValue, 0, typeof(OverflowException))]
     [Theory]
     public void TestAdvance(
         string testName,

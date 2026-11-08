@@ -27,23 +27,23 @@ namespace BinaryBufferLib
 
         public static int Advance(
             ref int pos,
-            int numBytes)
-        {
-            Debug.Assert(pos >= 0);
-
-            if (numBytes < 0)
-                throw new ArgumentOutOfRangeException(nameof(numBytes));
-
-            pos = checked(pos + numBytes);
-
-            return pos;
-        }
+            int count)
+            => Advance<byte>(ref pos, count);
 
         public static int Advance<T>(
             ref int pos,
             int count)
             where T : unmanaged
-            => Advance(ref pos, checked(count * Marshal.SizeOf<T>()));
+        {
+            Debug.Assert(pos >= 0);
+
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            pos = checked(pos + count * Marshal.SizeOf<T>());
+
+            return pos;
+        }
 
         public static int Seek(
             ref int pos, 
