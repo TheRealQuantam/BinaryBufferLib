@@ -28,6 +28,40 @@ class BufferWrapper(byte[] buffer)
 
 public class TestCommon
 {
+    [InlineData("valid bytes", 2, false, 8, 10)]
+    [InlineData("valid ints", 2, true, 8, 34)]
+    [InlineData("negative offset", -1, false, 0, 0, typeof(TraceAssertException))]
+    [InlineData("negative size", 2, false, -1, 0, typeof(ArgumentOutOfRangeException))]
+    [InlineData("add overflow", 2, false, int.MaxValue, 0, typeof(OverflowException))]
+    [InlineData("multiply overflow", 2, true, int.MaxValue, 0, typeof(OverflowException))]
+    [InlineData("funny overflow", 2, true, int.MinValue, 0, typeof(OverflowException))]
+    [Theory]
+    public void TestAdvance(
+        string testName,
+        int pos,
+        bool isInt,
+        int count,
+        int result,
+        Type? exceptionType = null)
+    {
+        if (ShouldSkipAssert(exceptionType))
+            return;
+
+        int newPos = pos;
+        Func<int> Advance = isInt 
+            ? () => Common.Advance<int>(ref newPos, count) 
+            : () => Common.Advance(ref newPos, count);
+
+        if (exceptionType != null)
+            Assert.Throws(exceptionType, () => Advance());
+        else
+        {
+            int res = Advance();
+            Assert.Equal(result, res);
+            Assert.Equal(result, newPos);
+        }
+    }
+
     [InlineData("negative offset from start", -1, SeekOrigin.Begin, 64, typeof(ArgumentOutOfRangeException))]
     [InlineData("start from start", 0, SeekOrigin.Begin, 0)]
     [InlineData("end from start", 128, SeekOrigin.Begin, 128)]

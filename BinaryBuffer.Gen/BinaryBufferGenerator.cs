@@ -102,11 +102,16 @@ namespace BinaryBufferLib
 ");
 
             GenerateAccessMethods(
-                sb, "    ", false, MethodClass.Read, false);
+                sb, "    ", "FixedBufferReader", false, MethodClass.Read, false);
             GenerateAccessMethods(
-                sb, "    ", false, MethodClass.Peek, false);
+                sb, "    ", "FixedBufferReader", false, MethodClass.Peek, false);
+
             GenerateAccessMethods(
-                sb, "    ", false, MethodClass.Write, false);
+                sb, "    ", "FixedBuffer", false, MethodClass.Read, false);
+            GenerateAccessMethods(
+                sb, "    ", "FixedBuffer", false, MethodClass.Peek, false);
+            GenerateAccessMethods(
+                sb, "    ", "FixedBuffer", false, MethodClass.Write, false);
 
             sb.Append(
 $@"
@@ -131,8 +136,10 @@ namespace BinaryBufferLib
     {{
 ");
 
-            GenerateAccessMethods(sb, "    ", true, MethodClass.Read, false);
-            GenerateAccessMethods(sb, "    ", true, MethodClass.Peek, false);
+            GenerateAccessMethods(
+                sb, "    ", "BufferReader", true, MethodClass.Read, false);
+            GenerateAccessMethods(
+                sb, "    ", "BufferReader", true, MethodClass.Peek, false);
 
             sb.Append(
 $@"
@@ -157,7 +164,12 @@ namespace BinaryBufferLib
     {{
 ");
 
-            GenerateAccessMethods(sb, "    ", true, MethodClass.Write, true);
+            GenerateAccessMethods(
+                sb, "    ", "DynamicBuffer", true, MethodClass.Read, true);
+            GenerateAccessMethods(
+                sb, "    ", "DynamicBuffer", true, MethodClass.Peek, true);
+            GenerateAccessMethods(
+                sb, "    ", "DynamicBuffer", true, MethodClass.Write, true);
 
             sb.Append(
 $@"
@@ -229,27 +241,29 @@ $@"
         void GenerateAccessMethods(
             StringBuilder sb,
             string baseIndent,
+            string thisType,
             bool isDynamic,
             MethodClass cls,
             bool hasEndOffs)
         {
             string indent = "    ";
-            GenerateAccessMethods(sb, indent, isDynamic, cls, hasEndOffs, "Byte", false, "S");
-            GenerateAccessMethods(sb, indent, isDynamic, cls, hasEndOffs, "Int16", true, "U");
-            GenerateAccessMethods(sb, indent, isDynamic, cls, hasEndOffs, "Int32", true, "U");
-            GenerateAccessMethods(sb, indent, isDynamic, cls, hasEndOffs, "Int64", true, "U");
-            //GenerateAccessMethods(sb, indent, isDynamic, cls, hasEndOffs, "Int128", true, "U");
-            //GenerateAccessMethods(sb, indent, isDynamic, cls, hasEndOffs, "Half", true, "");
+            GenerateAccessMethods(sb, indent, thisType, isDynamic, cls, hasEndOffs, "Byte", false, "S");
+            GenerateAccessMethods(sb, indent, thisType, isDynamic, cls, hasEndOffs, "Int16", true, "U");
+            GenerateAccessMethods(sb, indent, thisType, isDynamic, cls, hasEndOffs, "Int32", true, "U");
+            GenerateAccessMethods(sb, indent, thisType, isDynamic, cls, hasEndOffs, "Int64", true, "U");
+            //GenerateAccessMethods(sb, indent, thisType, isDynamic, cls, hasEndOffs, "Int128", true, "U");
+            //GenerateAccessMethods(sb, indent, thisType, isDynamic, cls, hasEndOffs, "Half", true, "");
 
 #if !NETSTANDARD
-            GenerateAccessMethods(sb, indent, isDynamic, cls, hasEndOffs, "Single", true, "");
-            GenerateAccessMethods(sb, indent, isDynamic, cls, hasEndOffs, "Double", true, "");
+            GenerateAccessMethods(sb, indent, thisType, isDynamic, cls, hasEndOffs, "Single", true, "");
+            GenerateAccessMethods(sb, indent, thisType, isDynamic, cls, hasEndOffs, "Double", true, "");
 #endif
         }
 
         void GenerateAccessMethods(
             StringBuilder sb,
             string baseIndent,
+            string thisType,
             bool isDynamic,
             MethodClass cls,
             bool hasEndOffs,
@@ -258,19 +272,16 @@ $@"
             string altPrefix)
         {
             string staticWord = "", thisParam = "", thisParamComma = "", thisPre = "", thisParamHelp = "", buffer, endArg, endGrowArgs;
-            string readName, advValue, advSuff;
 
+            string readName, advValue, advSuff;
             (readName, advValue, advSuff) = cls != MethodClass.Peek
                 ? ("Read", "true", "")
                 : ("Peek", "false", " without advancing");
             
             if (!isDynamic)
             {
-                string ioSuff = cls == MethodClass.Write 
-                    ? "Writer" 
-                    : "Reader";
                 staticWord = "static ";
-                thisParam = $"this ref FixedBuffer{ioSuff} buffer";
+                thisParam = $"this ref {thisType} buffer";
                 thisParamComma = thisParam + ", ";
                 thisParamHelp = "/// <param name=\"buffer\">The buffer to read into.</param>\r\n        ";
                 thisPre = "buffer.";
@@ -320,7 +331,7 @@ $@"
                         {
                             sb.Append($@"
         /// <summary>
-        /// Get an enumerable to read {endianText}{fullType} values beginning from the current position. The enumerable has its own position, and does not advance the position of the DynamicBuffer.
+        /// Get an enumerable to read {endianText}{fullType} values beginning from the current position. The enumerable has its own position, and does not advance the position of the {thisType}.
         /// </summary>
         public IEnumerable<{fullType}> Read{endianType}s()
             => Enumerate<{fullType}, {encoding}>();

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 [assembly: InternalsVisibleTo("BinaryBufferLib.Test")]
@@ -23,6 +24,26 @@ namespace BinaryBufferLib
 
             pos = newPos;
         }
+
+        public static int Advance(
+            ref int pos,
+            int numBytes)
+        {
+            Debug.Assert(pos >= 0);
+
+            if (numBytes < 0)
+                throw new ArgumentOutOfRangeException(nameof(numBytes));
+
+            pos = checked(pos + numBytes);
+
+            return pos;
+        }
+
+        public static int Advance<T>(
+            ref int pos,
+            int count)
+            where T : unmanaged
+            => Advance(ref pos, checked(count * Marshal.SizeOf<T>()));
 
         public static int Seek(
             ref int pos, 

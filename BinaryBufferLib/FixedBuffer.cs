@@ -4,9 +4,9 @@ using System.IO;
 namespace BinaryBufferLib
 {
     /// <summary>
-    /// A lightweight utility type that can be used to write bytes and other types with automatic endian conversion to a fixed-size Span-based buffer using stream-like semantics. Simpler and faster than DynamicBuffer, offering no support for resizable buffers.
+    /// A lightweight utility type that can be used to read and write bytes and other types with automatic endian conversion to a fixed-size Span-based buffer using stream-like semantics. Simpler and faster than DynamicBuffer, offering no support for resizable buffers.
     /// </summary>
-    public ref struct FixedBufferWriter
+    public ref struct FixedBuffer
     {
         internal Span<byte> _buffer;
         internal int _pos; // Always 0+
@@ -17,10 +17,10 @@ namespace BinaryBufferLib
         public Span<byte> Span => _buffer;
 
         /// <summary>
-        /// Create a FixedBufferWriter over a Span<byte></byte>.
+        /// Create a FixedBuffer over a Span<byte></byte>.
         /// </summary>
         /// <param name="buffer"></param>
-        public FixedBufferWriter(Span<byte> buffer)
+        public FixedBuffer(Span<byte> buffer)
         {
             _buffer = buffer;
             _pos = 0;
@@ -78,6 +78,26 @@ namespace BinaryBufferLib
         /// <returns></returns>
         public FixedBufferReader GetReader()
             => new(this, Position);
+
+        /// <summary>
+        /// Advance the current position by numBytes bytes.
+        /// </summary>
+        /// <param name="numBytes">The number of bytes to advance.</param>
+        /// <returns>The new position.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public int Advance(int numBytes)
+            => Common.Advance(ref _pos, numBytes);
+
+        /// <summary>
+        /// Advance the current position by count Ts.
+        /// </summary>
+        /// <typeparam name="T">The type to advance a multiple of.</typeparam>
+        /// <param name="count">The count to advance.</param>
+        /// <returns>The new position.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public int Advance<T>(int count = 1)
+            where T : unmanaged
+            => Common.Advance<T>(ref _pos, count);
 
         /// <summary>
         /// Set the current position for subsequent reads and writes.

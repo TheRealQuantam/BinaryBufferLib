@@ -84,6 +84,26 @@ namespace BinaryBufferLib
                 start, length > 0 ? length : _buffer.Length);
 
         /// <summary>
+        /// Advance the current position by numBytes bytes.
+        /// </summary>
+        /// <param name="numBytes">The number of bytes to advance.</param>
+        /// <returns>The new position.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public int Advance(int numBytes)
+            => Common.Advance(ref _pos, numBytes);
+
+        /// <summary>
+        /// Advance the current position by count Ts.
+        /// </summary>
+        /// <typeparam name="T">The type to advance a multiple of.</typeparam>
+        /// <param name="count">The count to advance.</param>
+        /// <returns>The new position.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public int Advance<T>(int count = 1)
+            where T : unmanaged
+            => Common.Advance<T>(ref _pos, count);
+
+        /// <summary>
         /// Set the current position for subsequent reads and writes.
         /// </summary>
         /// <param name="offset">The offset from the specified origin.</param>

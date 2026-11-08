@@ -1,12 +1,14 @@
-﻿using System;
+﻿using BinaryBufferLib.Encodings;
+using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
 namespace BinaryBufferLib
 {
     /// <summary>
-    /// A dynamically resizing buffer that can be written to with automatic endian conversion using stream-like semantics.
+    /// A dynamically resizing buffer that can be read and written to with automatic endian conversion using stream-like semantics.
     /// </summary>
     public partial class DynamicBuffer 
         : IBufferWriter<byte>
@@ -189,6 +191,26 @@ namespace BinaryBufferLib
         }
 
         /// <summary>
+        /// Advance the current position by numBytes bytes.
+        /// </summary>
+        /// <param name="numBytes">The number of bytes to advance.</param>
+        /// <returns>The new position.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public int Advance(int numBytes)
+            => Common.Advance(ref _pos, numBytes);
+
+        /// <summary>
+        /// Advance the current position by count Ts.
+        /// </summary>
+        /// <typeparam name="T">The type to advance a multiple of.</typeparam>
+        /// <param name="count">The count to advance.</param>
+        /// <returns>The new position.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public int Advance<T>(int count = 1)
+            where T : unmanaged
+            => Common.Advance<T>(ref _pos, count);
+
+        /// <summary>
         /// Set the current position for subsequent reads and writes.
         /// </summary>
         /// <param name="offset">The offset from the specified origin.</param>
@@ -231,5 +253,15 @@ namespace BinaryBufferLib
 
         internal Span<byte> SliceTo(int pos)
             => _buffer.AsSpan(0, pos);
+
+        internal IEnumerable<T> Enumerate<T, TEnc>()
+            where T : unmanaged
+            where TEnc : struct, IBinaryEncoding<T>
+        {
+            TEnc encoding = default(TEnc);
+            int end = checked(_endOffs - encoding.Size + 1);
+            for (int pos = _pos; pos < end; pos += encoding.Size)
+                yield return encoding.Read(_buffer.AsSpan(pos));
+        }
     }
 }

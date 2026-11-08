@@ -27,11 +27,11 @@ namespace BinaryBufferLib
         }
 
         /// <summary>
-        /// Create a FixedBufferReader from a FixedBufferWriter. The reader will use the same Span as the writer.
+        /// Create a FixedBufferReader from a FixedBuffer. The reader will use the same Span as the writer.
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="position">The initial Position for reads, or negative to use the FixedBufferWriter's current Position.</param>
-        public FixedBufferReader(FixedBufferWriter writer, int position = 0)
+        /// <param name="position">The initial Position for reads, or negative to use the FixedBuffer's current Position.</param>
+        public FixedBufferReader(FixedBuffer writer, int position = 0)
         {
             _buffer = writer._buffer;
             _pos = position >= 0 ? position : writer._pos;
@@ -78,6 +78,26 @@ namespace BinaryBufferLib
 
             return _buffer.Slice(_pos);
         }
+
+        /// <summary>
+        /// Advance the current position by numBytes bytes.
+        /// </summary>
+        /// <param name="numBytes">The number of bytes to advance.</param>
+        /// <returns>The new position.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public int Advance(int numBytes)
+            => Common.Advance(ref _pos, numBytes);
+
+        /// <summary>
+        /// Advance the current position by count Ts.
+        /// </summary>
+        /// <typeparam name="T">The type to advance a multiple of.</typeparam>
+        /// <param name="count">The count to advance.</param>
+        /// <returns>The new position.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public int Advance<T>(int count = 1)
+            where T : unmanaged
+            => Common.Advance<T>(ref _pos, count);
 
         /// <summary>
         /// Set the current position for subsequent reads and writes.
