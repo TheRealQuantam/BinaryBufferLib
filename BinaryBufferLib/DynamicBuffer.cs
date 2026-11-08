@@ -147,6 +147,13 @@ namespace BinaryBufferLib
         }
 
         /// <summary>
+        /// Get a BufferReader for the underlying buffer at the current Position. The reader is only valid until the DynamicBuffer is modified.
+        /// </summary>
+        /// <returns></returns>
+        public BufferReader GetReader()
+            => new(this, Position);
+
+        /// <summary>
         /// Ensure that there is at least a specified amount of space in the buffer.
         /// </summary>
         /// <param name="newSize">The minimum buffer size.</param>

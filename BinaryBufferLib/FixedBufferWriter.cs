@@ -73,6 +73,13 @@ namespace BinaryBufferLib
         }
 
         /// <summary>
+        /// Get a FixedBufferReader for the underlying buffer at the current Position.
+        /// </summary>
+        /// <returns></returns>
+        public FixedBufferReader GetReader()
+            => new(this, Position);
+
+        /// <summary>
         /// Set the current position for subsequent reads and writes.
         /// </summary>
         /// <param name="offset">The offset from the specified origin.</param>
