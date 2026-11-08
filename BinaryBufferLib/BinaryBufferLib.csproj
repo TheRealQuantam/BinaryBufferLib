@@ -9,7 +9,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>$(AssemblyName)</Title>
     <Authors>Quantam</Authors>
-    <Description>A collection of lightweight objects for reading and writing binary data with automatic endian conversion with stream semantics.</Description>
+    <Description>A .NET library of lightweight objects for reading and writing binary data with automatic endian conversion with stream semantics.</Description>
 	<VersionPrefix>0.1.1</VersionPrefix>
 	<PackageLicenseFile>lgpl-3.0.txt</PackageLicenseFile>
 	<Copyright>Copyright © Justin Olbrantz $([System.DateTime]::Now.Year)</Copyright>

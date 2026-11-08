@@ -27,7 +27,7 @@ namespace BinaryBufferLib
         }
 
         /// <summary>
-        /// Create a FixedBufferReader from a FixedBufferWriter. The reader will use the same Span and copy the current position of the writer.
+        /// Create a FixedBufferReader from a FixedBufferWriter. The reader will use the same Span as the writer.
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="position">The initial Position for reads, or negative to use the FixedBufferWriter's current Position.</param>
