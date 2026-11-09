@@ -17,7 +17,8 @@ Key features:
 - Support for built-in integer and floating-point types
 - Support for arrays through type[], `(ReadOnly)Span`, `I(ReadOnly)List`, `IEnumerable` (reading arrays as `IEnumerables` is only supported for `BufferReader`)
 
-To do:
+Current state:
+- 0.x versions are essentially experimental/evaluation, with breaking changes possible in response to user feedback on the design. Once it reaches 1.0 it will follow semantic versioning and maintain a backward compatible API.
 - Needs more documentation
 - Needs more unit tests
 
