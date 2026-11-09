@@ -132,12 +132,18 @@ namespace BinaryBufferLib
             => _buffer.Span.GetEnumerator();
 
         /// <summary>
+        /// Try to read a byte from the current position without advancing.
+        /// </summary>
+        /// <returns>The byte read, or -1 if at the end of the stream.</returns>
+        public int Peek()
+            => Common.Read(_buffer.Span, ref _pos, _buffer.Length, false);
+
+        /// <summary>
         /// Try to read a byte from the current position.
         /// </summary>
-        /// <param name="advance">Whether to advance the current position.</param>
         /// <returns>The byte read, or -1 if at the end of the stream.</returns>
-        public int Read(bool advance = true)
-            => Common.Read(_buffer.Span, ref _pos, _buffer.Length, advance);
+        public int Read()
+            => Common.Read(_buffer.Span, ref _pos, _buffer.Length, true);
 
         internal IEnumerable<T> Enumerate<T, TEnc>()
             where T : unmanaged

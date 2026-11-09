@@ -113,7 +113,7 @@ namespace BinaryBufferLib
         /// Try to read a byte from the current position without advancing.
         /// </summary>
         /// <returns>The byte read, or -1 if at the end of the stream.</returns>
-        public int Read(bool advance = true)
+        public int Peek()
             => Common.Read(_buffer, ref _pos, _buffer.Length, false);
 
         /// <summary>

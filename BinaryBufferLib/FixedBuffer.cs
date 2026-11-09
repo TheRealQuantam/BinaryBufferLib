@@ -108,5 +108,19 @@ namespace BinaryBufferLib
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public int Seek(int offset, SeekOrigin origin = SeekOrigin.Begin)
             => Common.Seek(ref _pos, _buffer.Length, offset, origin);
+
+        /// <summary>
+        /// Try to read a byte from the current position without advancing.
+        /// </summary>
+        /// <returns>The byte read, or -1 if at the end of the stream.</returns>
+        public int Peek()
+            => Common.Read(_buffer, ref _pos, _buffer.Length, false);
+
+        /// <summary>
+        /// Try to read a byte from the current position.
+        /// </summary>
+        /// <returns>The byte read, or -1 if at the end of the stream.</returns>
+        public int Read()
+            => Common.Read(_buffer, ref _pos, _buffer.Length, true);
     }
 }
