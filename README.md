@@ -38,10 +38,6 @@ Ultimately BinaryBufferLib was created to answer the question "what is the easie
 
 This is generally the most efficient way to read/write objects. The alternative would be to provide an offset to read/write the specified item at, but this becomes very cumbersome very quickly, requiring numerous hard-coded offsets to structure members.
 
-### Why does reading an array as an `IEnumerable` not update `Position`?
-
-This is to allow peek semantics without requiring manual rollback of the current position. `Advance` can be used to advance the position after the number of items to advance is known.
-
 ### What features might be added in the future?
 Some possibilities:
 - A per-buffer property that specifies the default endian so the endian suffixes can be omitted from functions

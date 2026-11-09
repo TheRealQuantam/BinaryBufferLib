@@ -333,7 +333,7 @@ $@"
         /// <summary>
         /// Get an enumerable to read {endianText}{fullType} values beginning from the current position. The enumerable has its own position, and does not advance the position of the {thisType}.
         /// </summary>
-        public IEnumerable<{fullType}> Read{endianType}s()
+        public IEnumerable<{fullType}> Peek{endianType}s()
             => Enumerate<{fullType}, {encoding}>();
 
 ");

@@ -35,7 +35,7 @@ Console.WriteLine(ToString(span.ToArray()));
 
 // NOTE: Reading an enumerable does not update Position
 Console.WriteLine(br.Position);
-Console.WriteLine(ToString(br.ReadBytes().Take(2)));
+Console.WriteLine(ToString(br.PeekBytes().Take(2)));
 Console.WriteLine(br.Position);
 Console.WriteLine(br.Advance<byte>(2));
 
