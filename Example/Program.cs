@@ -32,11 +32,7 @@ Console.WriteLine(ToString(list));
 Span<byte> span = [0, 0];
 br.Read(span);
 Console.WriteLine(ToString(span.ToArray()));
-
-// NOTE: Reading an enumerable does not update Position
-Console.WriteLine(br.Position);
 Console.WriteLine(ToString(br.PeekBytes().Take(2)));
-Console.WriteLine(br.Position);
 Console.WriteLine(br.Advance<byte>(2));
 
 Span<byte> buffer = stackalloc byte[4];
