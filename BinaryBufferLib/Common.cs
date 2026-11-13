@@ -238,6 +238,9 @@ namespace BinaryBufferLib
             where T : unmanaged
             where TEnc : struct, IBinaryEncoding<T>
         {
+            if (count == 0)
+                return;
+
             TEnc encoding = default(TEnc);
             EnsureSpace(
                 ref target, 

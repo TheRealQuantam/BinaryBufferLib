@@ -260,12 +260,11 @@ public class TestCommon
             : endOffs;
         foreach (bool isGrowable in TestUtils.EnumBool(canGrow))
         {
-            foreach (int type in Enumerable.Range(0, 1))
+            foreach (int type in Enumerable.Range(0, 2))
             {
                 BufferWrapper buffWrap = new(cleanBuff.ToArray());
                 int newPos = pos,
-                    newEndOffs = endOffs,
-                    numWritten = 1;
+                    newEndOffs = endOffs;
 
                 try
                 {
@@ -326,7 +325,7 @@ public class TestCommon
                         }
                     }
 
-                    Assert.Equal(tgtSize, numWritten * valSize);
+                    Assert.Equal(tgtSize, count * valSize);
                     Assert.True(buffWrap.Buffer.Length >= tgtEndOffs);
                     Assert.Equal(tgtPos, newPos);
                     Assert.Equal(tgtEndOffs, newEndOffs);
